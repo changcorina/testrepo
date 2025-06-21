@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>媽媽的日程</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"> <!-- or "black-translucent" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <style>
+        body { 
+            font-family: "Microsoft JhengHei", "Helvetica Neue", sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #date-section {
+            flex: 6; /* 60% width */
+            background: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+        }
+        #year, #day, #weekday {
+            font-size: 8.5em;
+	    font-weight: bold;
+            color: #555;
+        }
+        #date {
+            font-size: 4.0em;
+            font-weight: bold;
+            color: #FF5733; /* Neon orange */
+            margin: 10px 0;
+        }
+        #schedule-section {
+            flex: 4; /* 40% width */
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .event {
+            font-size: 3em;
+            margin: 20px 0;
+            padding-left: 10px;
+            border-left: 4px solid #FF5733;
+        }
+        .am-pm {
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left: Date (60%) -->
+    <div id="date-section">
+        <div id="year"></div>
+        <div id="day"></div>
+        <div id="weekday"></div>
+    </div>
+
+    <!-- Right: Schedule (40%) -->
+    <div id="schedule-section">
+        <!--<div class="event"><span class="am-pm">上午</span> 9:30 <br/>曾姑娘打電話給你</div>
+        <div class="event"><span class="am-pm">上午</span> 10:00 <br/>長者中心</div><br>
+        <div class="event"><span class="am-pm">下午</span> 3:30 <br/>譚姑娘 <br/>到家煮晚飯</div>-->
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const isToday = now.getHours() < 10;
+            const targetDate = isToday ? now : new Date(now.setDate(now.getDate() + 1));
+	        updateEvent(targetDate);	    
+
+            // Format: "YYYY年 M月D日 星期X"
+	    document.getElementById("year").textContent = `${targetDate.getFullYear()}年`;
+	    const month = targetDate.getMonth() + 1;
+	    const day = targetDate.getDate();
+	    document.getElementById("day").textContent = `${month}月${day}日`;
+	    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+	    document.getElementById("weekday").textContent = weekdays[targetDate.getDay()];
+        }
+
+	    function updateEvent(date) {
+            day = date.getDay();
+            html = "";
+            switch (day){
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    html = `<div class=\"event\"><span class=\"am-pm\">上午</span> 9:30 <br/>曾姑娘打電話給你</div>
+                            <div class=\"event\"><span class=\"am-pm\">上午</span> 10:00 <br/>長者中心</div>
+                            <br><div class=\"event\"><span class=\"am-pm\">下午</span> 3:30 <br/>譚姑娘 <br/>到家煮晚飯</div>`;
+                    break;
+                case 6:
+                    html = `<div class=\"event\"><span class=\"am-pm\">上午</span> 9:00 <br/>同女兒開會</div>`;
+                    break;
+                case 7:
+                    html = `<div class=\"event\"><span class=\"am-pm\">上午</span> 9:00 <br/>出門口</div>
+                            <div class=\"event\"><span class=\"am-pm\">上午</span> 9:30 <br/>教會</div>`;
+                    break;
+            }
+
+            document.getElementById("schedule-section").innerHTML = html;
+	    }
+
+        updateDateTime();
+        setInterval(updateDateTime, 60000); // Update every minute
+    </script>
+</body>
+</html>
